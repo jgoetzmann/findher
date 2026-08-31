@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace-manifest.json",
+  "name": "findher",
+  "owner": {
+    "name": "Jack Goetzmann",
+    "url": "https://github.com/jgoetzmann"
+  },
+  "description": "Install findher as a Claude plugin.",
+  "plugins": [
+    {
+      "name": "findher",
+      "source": "./",
+      "description": "Build a plan for meeting people that cannot write a false statement about you into a public place. Five guards, all of them code.",
+      "license": "MIT",
+      "keywords": ["skills", "guards", "provenance", "planning", "claude-code", "privacy", "safety"]
+    }
+  ]
+}

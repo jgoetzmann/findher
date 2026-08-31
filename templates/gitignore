@@ -1,0 +1,40 @@
+# Copied into the plan repo as `.gitignore` before any file with content in it
+# exists. Every line carries its reason, because a rule nobody can justify is a
+# rule somebody deletes six commits later.
+
+# The seed. One person's own words about who they want, including whatever they
+# wrote before they thought about it being read. Attached to a real name it is
+# permanent and public. The decode cites it by line number and never quotes it.
+seed.md
+
+# The likeness files. These name other people — friends, family, exes — who did
+# not agree to be in a document. The exposure here is theirs, not yours.
+likeness-*.md
+
+# The interview answers: place, timetable, free evenings, dealbreakers. A map of
+# where one person is on a Wednesday.
+interview.md
+
+# The ledger. Dates and rooms is a movement history.
+log.tsv
+
+# The calendar. The same movement history, in a format other software reads.
+*.ics
+
+# Outbound drafts. Half-written mail about a real person is worse than sent mail
+# about one.
+outreach/
+
+# Photographs and their metadata. Raw camera files carry the GPS of wherever
+# they were taken, including home. Run strip_exif.py before any of these leave.
+photos/
+*.jpg
+*.jpeg
+*.png
+*.heic
+
+# Scratch.
+.venv/
+__pycache__/
+*.pyc
+.DS_Store

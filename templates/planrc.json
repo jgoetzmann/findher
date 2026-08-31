@@ -1,0 +1,8 @@
+{
+  "place": "REPLACE_ME — the city and neighbourhood you are actually in, asked and restated. Never read off the system clock.",
+  "tz": "REPLACE_ME — the IANA timezone, like America/Chicago.",
+  "age_floor": 18,
+  "rooms_max": 2,
+  "evenings_free": [],
+  "likeness_files": []
+}

@@ -1,0 +1,47 @@
+name: Check package
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Check package files
+        run: python3 scripts/validate-package.py
+      - name: Watch every guard fail on injected input
+        run: python3 scripts/selftest.py --verbose
+      - name: Check skill discovery
+        run: npx --yes skills@1.5.20 add . --list
+      - name: Check Claude marketplace
+        run: |
+          npm install --global @anthropic-ai/claude-code@2.1.142
+          claude plugin validate .
+      - name: Check skill frontmatter loads
+        run: |
+          python3 -c '
+          import pathlib, sys
+          text = pathlib.Path("SKILL.md").read_text(encoding="utf-8")
+          if not text.startswith("---"): sys.exit("SKILL.md: no YAML frontmatter at the top of the file")
+          front = text.split("---", 2)[1]
+          keys = [line.split(":", 1)[0] for line in front.splitlines() if line[:1].strip() and ":" in line]
+          missing = [key for key in ("name", "description") if key not in keys]
+          if missing: sys.exit("SKILL.md frontmatter is missing required key(s): " + ", ".join(missing))
+          print("SKILL.md frontmatter keys: " + ", ".join(keys))
+          '

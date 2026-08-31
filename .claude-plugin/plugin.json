@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "findher",
+  "description": "Build a plan for meeting people that cannot write a false statement about you into a public place. Five guards, all of them code.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jack Goetzmann",
+    "url": "https://github.com/jgoetzmann"
+  },
+  "homepage": "https://github.com/jgoetzmann/findher",
+  "repository": "https://github.com/jgoetzmann/findher",
+  "license": "MIT",
+  "keywords": ["skills", "guards", "provenance", "planning", "claude-code", "privacy", "safety"],
+  "skills": ["./"]
+}

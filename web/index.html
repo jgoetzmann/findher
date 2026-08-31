@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>findher — the guard is the product</title>
+<meta name="description" content="An agent skill that builds you a plan for meeting someone and refuses to write one sentence about you that you did not say first. Five guards, all of them code.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="findher">
+<meta property="og:description" content="It refuses any seed that names a person. What it produces instead is two rooms, a calendar, copy you can defend out loud, and a criterion that is a row in a log file.">
+<link rel="canonical" href="/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E9EAE4;
+    --paper-2:#E1E3DB;
+    --ink:#14171A;
+    --soft:#5A6167;
+    --stamp:#A8261B;
+    --pass:#2E6046;
+    --rule:rgba(20,23,26,.16);
+    --measure:70ch;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font:400 15px/1.6 "JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px}
+  a{color:var(--ink);text-underline-offset:3px;text-decoration-thickness:1px}
+  a:hover{color:var(--stamp)}
+  :focus-visible{outline:2px solid var(--stamp);outline-offset:3px}
+  h1,h2,.serif{font-family:"Instrument Serif",Georgia,serif;font-weight:400;letter-spacing:-.01em}
+  h1{font-size:clamp(52px,11vw,104px);line-height:.92;margin:0}
+  h2{font-size:clamp(28px,4.6vw,42px);line-height:1.05;margin:0 0 14px}
+  p{margin:0 0 15px;max-width:var(--measure)}
+  section{padding:64px 0;border-top:1px solid var(--rule)}
+  hr{border:0;border-top:1px solid var(--rule);margin:0}
+
+  /* hero */
+  header{padding:72px 0 8px}
+  .lede{font-size:clamp(17px,2.3vw,21px);line-height:1.5;max-width:56ch;margin:22px 0 0}
+  .lede em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:1.12em}
+  .meta{color:var(--soft);font-size:13px;margin-top:28px}
+
+  /* the guard bench */
+  .bench{margin:40px 0 8px;border:1px solid var(--ink);background:var(--paper-2)}
+  .bench-head{
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    padding:10px 14px;border-bottom:1px solid var(--ink);font-size:12px;color:var(--soft);
+  }
+  .bench-head b{color:var(--ink);font-weight:500}
+  .bench label{display:block;padding:14px 14px 0;font-size:12px;color:var(--soft)}
+  textarea{
+    display:block;width:100%;border:0;resize:vertical;min-height:88px;
+    background:transparent;color:var(--ink);padding:8px 14px 14px;
+    font:400 15px/1.55 "JetBrains Mono",monospace;
+  }
+  textarea:focus{outline:0;background:rgba(255,255,255,.4)}
+  .verdict{border-top:1px solid var(--ink);padding:14px;display:flex;gap:14px;align-items:flex-start}
+  .stamp{
+    flex:none;border:2px solid currentColor;padding:3px 9px;font-weight:700;font-size:13px;
+    letter-spacing:.04em;transform:rotate(-2.5deg);
+  }
+  .verdict.refused{color:var(--stamp)}
+  .verdict.clean{color:var(--pass)}
+  .verdict .say{color:var(--ink);font-size:13.5px;line-height:1.5}
+  .verdict .rule{font-weight:700}
+  .samples{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 14px}
+  .samples button{
+    font:400 12.5px/1 "JetBrains Mono",monospace;color:var(--ink);
+    background:transparent;border:1px solid var(--rule);padding:7px 10px;cursor:pointer;
+  }
+  .samples button:hover{border-color:var(--ink);background:rgba(255,255,255,.5)}
+
+  /* steps */
+  ol.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+  ol.steps li{
+    counter-increment:s;display:grid;grid-template-columns:2.2rem 1fr;gap:14px;
+    padding:13px 0;border-bottom:1px solid var(--rule);
+  }
+  ol.steps li::before{content:counter(s);color:var(--stamp);font-size:13px;padding-top:2px}
+  ol.steps b{font-weight:500}
+  ol.steps span{display:block;color:var(--soft);font-size:13.5px}
+
+  /* guards */
+  dl{margin:0}
+  dt{font-weight:700;margin:26px 0 5px}
+  dd{margin:0;color:var(--soft);max-width:var(--measure)}
+  dd b{color:var(--ink);font-weight:500}
+
+  pre{
+    background:var(--paper-2);border:1px solid var(--rule);padding:14px;overflow-x:auto;
+    font-size:13.5px;line-height:1.55;margin:0 0 15px;
+  }
+  .cols{display:grid;gap:34px;grid-template-columns:1fr}
+  @media(min-width:760px){.cols{grid-template-columns:1fr 1fr}}
+  footer{padding:44px 0 72px;color:var(--soft);font-size:13px;border-top:1px solid var(--rule)}
+  @media (prefers-reduced-motion:no-preference){
+    .stamp{animation:land .32s cubic-bezier(.2,1.4,.4,1) 1}
+    @keyframes land{from{transform:rotate(-14deg) scale(1.25);opacity:0}to{transform:rotate(-2.5deg) scale(1);opacity:1}}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>findher</h1>
+  <p class="lede">Builds you a plan for meeting someone, and refuses to write one
+  sentence about you that you did not say first. The first guard refuses any seed
+  that names a person — try it:</p>
+
+  <div class="bench">
+    <div class="bench-head">
+      <b>scripts/guards.py — check_seed()</b>
+      <span>runs here, in your browser</span>
+    </div>
+    <label for="seed">Describe who you are looking for</label>
+    <textarea id="seed" spellcheck="false">Jane Doe at Northwestern</textarea>
+    <div class="samples">
+      <button type="button" data-seed="Jane Doe at Northwestern">a name and a place</button>
+      <button type="button" data-seed="the one in my Tuesday class">the one in my Tuesday class</button>
+      <button type="button" data-seed="jane doe at northwestern">all lowercase</button>
+      <button type="button" data-seed="someone like @sarahdoe, that energy">a handle</button>
+      <button type="button" data-seed="into bouldering and board games; Board Games Club regulars, not competitive about it">an honest seed</button>
+    </div>
+    <div class="verdict refused" id="verdict">
+      <span class="stamp" id="stamp">REFUSED</span>
+      <span class="say" id="say"></span>
+    </div>
+  </div>
+  <p class="meta"><b>findher</b> produces two rooms, a calendar, copy you can defend
+  out loud, and a criterion that is a row in a log file. The rest is you on a
+  Wednesday, walking in.</p>
+  <p class="meta">Above is a trimmed version of the real rules. The shipped version is
+  checked against twelve refusing phrasings and seven honest ones, and the honest ones
+  must all pass — a gate that flags honest input teaches you to skim the output.</p>
+  <p class="meta">An agent skill. Markdown and stdlib Python, no dependencies. MIT.</p>
+</header>
+
+<section>
+  <h2>Why the guard is the product</h2>
+  <div class="cols">
+    <div>
+      <p>Ask an assistant to help you meet people and it writes you something confident.
+      With no source material it does not go quiet. It produces plausible sentences.</p>
+      <p>The next pass does not correct an invented detail. It elaborates it, until the
+      invention is better supported than anything you actually said.</p>
+    </div>
+    <div>
+      <p>A guard against one symptom does not catch the cause. A check that stops an
+      invented name reaching a live app still passes while the premise behind it stays
+      false.</p>
+      <p>So: nothing a model wrote about you counts as evidence. Every claim cites a line you
+      wrote yourself. And a claim with no line stays blank, with the question still next to
+      it — because a blank you cannot fill is a wrong question, not a hard question.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Five guards, all of them code</h2>
+  <p>Prose refusals get argued past. Each of these fails the build.</p>
+  <dl>
+    <dt>The seed is a type, not a person</dt>
+    <dd>Everything downstream — venue lookup, organiser calendars, recurrence, travel time
+    — is a location-intelligence pipeline. <b>Pointed at a category it is planning. Pointed
+    at one person it is stalking</b>, and the only difference is text you would otherwise
+    accept as freeform.</dd>
+
+    <dt>Adult age floor</dt>
+    <dd>Required, machine-readable, 18 or over, and it must agree in two files. The seed is
+    freeform and nothing else constrains it.</dd>
+
+    <dt>No protected characteristic as a search axis</dt>
+    <dd>A venue whose reason needs a demographic word is refused, and moving the word to
+    another column or padding it with a real clause does not help. <b>The justification
+    language is the tell</b>, because that is the language that leaks into how you talk
+    about the room once you are in it.</dd>
+
+    <dt>No send path</dt>
+    <dd>An AST scan over every script, for network imports and send calls. The skill drafts.
+    You send, type, and walk in.</dd>
+
+    <dt>Fail closed</dt>
+    <dd>A missing config, an emptied denylist, a renamed column, a routing document pointing
+    at nothing. <b>A preflight that ships with empty lists passes vacuously while printing a
+    green line</b> — that is the defect it exists to catch, sold as a feature.</dd>
+  </dl>
+  <p style="margin-top:30px">Every one has been watched failing on injected input:</p>
+  <pre>$ python3 scripts/selftest.py
+
+B1   12 phrasings that name an individual are all refused    pass
+B2   7 honest seeds are not refused                          pass
+B4   a venue justified by who is there, in 4 shapes          pass
+B6b  an emptied denylist fails rather than passing input     pass
+C3   the criterion exits 1 on day one, not 2                 pass
+...
+21 of 21 cases behaved.</pre>
+  <p>A guard you have never seen fail is a guard you are asserting, not testing.</p>
+</section>
+
+<section>
+  <h2>The run</h2>
+  <ol class="steps">
+    <li><b>Bootstrap: clone or scaffold</b><span>ignore rules staged before anything with content</span></li>
+    <li><b>Seed and decode</b><span>four bins: identity, logistical, inoperable, refused</span></li>
+    <li><b>Place and time</b><span>asked and restated, never read off the system clock</span></li>
+    <li><b>Research the rooms</b><span>the organiser's own page, every row marked</span></li>
+    <li><b>Pick two rooms</b><span>one for density, one for survivability</span></li>
+    <li><b>Likeness, then presentation</b><span>every claim carries a source, or stays blank</span></li>
+    <li><b>Messages and the linter</b><span>thirteen rules, and nothing that can send</span></li>
+    <li><b>The rig</b><span>calendar with a real VTIMEZONE, metadata stripped from photos</span></li>
+    <li><b>The criterion and the ledger</b><span>then stop, and say the rest is yours</span></li>
+  </ol>
+  <p style="margin-top:26px">The metric that predicts the outcome is showing up to the same
+  thing a fourth time, so being visible in eight places is being invisible in eight places.
+  Rooms entered is about 35% of it and initiating is another 25% — both of those are you on
+  a Wednesday, walking in. The criterion is a row in a log file, and not a document, for
+  exactly that reason.</p>
+</section>
+
+<section>
+  <h2>Install</h2>
+  <p>Clone it and scaffold a plan repo beside it. The ignore rules are staged before any
+  file with content in it exists, and it refuses a destination that already holds
+  something.</p>
+  <pre>git clone https://github.com/jgoetzmann/findher.git
+sh findher/scripts/bootstrap.sh ~/plans/thisyear</pre>
+  <p>Or install it as a skill and let the nine steps run as a conversation:</p>
+  <pre>npx skills add jgoetzmann/findher --global</pre>
+  <p>Or as a Claude Code plugin:</p>
+  <pre>/plugin marketplace add jgoetzmann/findher
+/plugin install findher@findher</pre>
+  <p>Then say what you want. It triggers on "help me meet people", "put myself out there",
+  "find a scene", and "where should I actually go". It refuses one thing outright: a
+  specific person. That refusal is the whole product.</p>
+  <p><a href="https://github.com/jgoetzmann/findher">Source on GitHub</a> · <a href="/SKILL.md">Read SKILL.md</a></p>
+</section>
+
+<footer>
+  <p>No tool here returns a person. That is not a limitation, it is the feature. MIT licensed.</p>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  var COMMON = new Set(("a an the and or but not no so if of to in on at for with from by about into over under than then that this these those who whom whose which what when where how why is are was were be been being has have had do does did can could would should will want wants like likes love loves prefer someone somebody anyone person people woman women man men guy guys girl girls partner friend friends grad graduate student students job work works career real kind quiet loud funny smart clever curious patient warm calm chill serious silly weird unusual nice good great long short old older young younger age years year live lives living music film films movie movies book books reads reading read cook cooks cooking food coffee tea beer wine walk walks hike hikes bike bikes run runs swim climb climbs climbing bouldering yoga dance sing play plays game games board cards chess art arts paint drawing photo photos write writing science math code coding design creative nonfiction fiction poetry theatre improv comedy podcast language travel dog dogs cat cats kids children family eventually someday maybe probably really very pretty quite more most less much many few some any all every out up down go goes going come get gets make makes take talk phone dinner lunch brunch weekend weekends night morning evening regular regulars competitive casual everywhere outside inside home city town local there here their them they she he her him his i me my we us our you your it its also too just still own new rather though always never often sometimes usually enough better best first last next other another together alone around through after before since while during again ever everything something nothing anything thing things stuff lot bit way ways time times day days week weeks month months place places room rooms world life part type side end start keep stay find look feel think know need try help meet meeting spend share build learn teach listen watch shows show joke jokes laugh care honest direct ambitious driven thoughtful generous independent adventurous outdoorsy introvert extrovert nerdy sarcastic witty sense values married single relationship dating date dates fun happy busy free late early close near far away back front left right high low big small little").split(" "));
+  var SCENE = new Set("club society night group league team choir band orchestra ensemble meetup collective guild circle crew jam run ride workshop festival union studio gym cafe bar pub church temple library market class course series screening screenings mic trivia chorus hall centre center space shop store park range court rink pool track wall kitchen garden".split(" "));
+  var INSTITUTION = new Set("university college campus school academy institute hospital clinic firm agency startup office lab department faculty dorm residence starbucks target section seminar lecture tutorial cohort shift".split(" "));
+  var DAYS = new Set("monday tuesday wednesday thursday friday saturday sunday".split(" "));
+  var CUES = ["her name","his name","name is","named","goes by","she works","he works","this girl","that girl","this guy","that guy","the one in","the one at","the one from","the one who","the barista","my ex","her instagram"];
+
+  function nameish(t) {
+    var w = t.toLowerCase().replace(/^['-]+|['-]+$/g, "");
+    return w.length > 1 && !COMMON.has(w) && !SCENE.has(w) && !DAYS.has(w) && !INSTITUTION.has(w);
+  }
+
+  function check(raw) {
+    var flat = raw.replace(/\s+/g, " ").trim(), low = flat.toLowerCase(), m;
+    if (!flat) return { rule: "empty", say: "Write something. With no seed there is nothing to decode, and the model will happily invent one." };
+    if (/\b[\w.+-]+@[\w-]+\.[a-z]{2,}\b/i.test(flat)) return { rule: "contact-email", say: "That is an email address." };
+    if (/(?:\+?\d{1,2}[ .-]?)?\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}/.test(flat)) return { rule: "contact-phone", say: "That is a phone number." };
+    if (/\b(?:https?:\/\/)?(?:www\.)?(instagram|facebook|linkedin|twitter|tiktok|hinge|bumble|tinder|reddit|strava)\.(?:com|co|me)\/\S+/i.test(flat)) return { rule: "profile-url", say: "That is a link to one person's profile." };
+    if ((m = flat.match(/(?<![\w.@])@[A-Za-z][\w.]{1,29}\b/))) return { rule: "handle", say: "That is an account handle: " + m[0] + "." };
+    for (var i = 0; i < CUES.length; i++) if (low.indexOf(CUES[i]) > -1) return { rule: "person-cue", say: "\u201c" + CUES[i] + "\u201d points at one person." };
+    if ((m = flat.match(/\b(?:my|the|her|his)\s+(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)\s+|(?:mon|tues|wednes|thurs|fri|satur|sun)day\s+)?(?:class|lab|section|seminar|lecture|shift|office|dorm|floor|building)\b/i)))
+      return { rule: "singular-slot", say: "\u201c" + m[0] + "\u201d is one slot on one timetable, which is one person." };
+    var bind = /\b([A-Za-z][\w'-]+)(?:\s+([A-Za-z][\w'-]+))?\s*(?:,|\bat\b|\bfrom\b|@)\s+(?:the\s+)?([A-Za-z][\w'-]+)/gi, hit;
+    while ((hit = bind.exec(flat))) {
+      if (hit[2] && nameish(hit[1]) && nameish(hit[2]) && (INSTITUTION.has(hit[3].toLowerCase()) || nameish(hit[3])))
+        return { rule: "name-institution", say: "A name bound to a place: " + hit[1] + " " + hit[2] + " + " + hit[3] + "." };
+    }
+    var cap = /\b([A-Z][a-z][\w'-]*)\s+(?:,\s*|at\s+|from\s+)(?:the\s+|my\s+)([A-Za-z][\w'-]+)(?:\s+([A-Za-z][\w'-]+))?/g;
+    while ((hit = cap.exec(flat))) {
+      var n = hit[1];
+      if (!nameish(n) || /(?:ing|s)$/i.test(n)) continue;
+      var rest = [hit[2] || "", hit[3] || ""];
+      if (rest.some(function (w) { return SCENE.has(w.toLowerCase()) || INSTITUTION.has(w.toLowerCase()); }) || nameish(hit[2]))
+        return { rule: "name-place", say: "A name bound to one room: " + n + " + " + rest.filter(Boolean).join(" ") + "." };
+    }
+    return null;
+  }
+
+  var box = document.getElementById("seed"), verdict = document.getElementById("verdict"),
+      stamp = document.getElementById("stamp"), say = document.getElementById("say");
+
+  function render() {
+    var bad = check(box.value);
+    verdict.className = "verdict " + (bad ? "refused" : "clean");
+    var fresh = stamp.cloneNode(false);
+    fresh.textContent = bad ? "REFUSED" : "ACCEPTED";
+    stamp.parentNode.replaceChild(fresh, stamp);
+    stamp = fresh;
+    say.innerHTML = bad
+      ? '<span class="rule">' + bad.rule + '</span> — ' + bad.say + " The build stops here."
+      : '<span class="rule">a type, not a person</span> — nothing in this resolves to one human being, so the rest of the plan can run.';
+  }
+
+  box.addEventListener("input", render);
+  Array.prototype.forEach.call(document.querySelectorAll(".samples button"), function (b) {
+    b.addEventListener("click", function () { box.value = b.dataset.seed; render(); box.focus(); });
+  });
+  render();
+})();
+</script>
+</body>
+</html>

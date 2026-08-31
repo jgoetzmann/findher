@@ -1,0 +1,30 @@
+# Generated at deploy time by copying the root SKILL.md into the output
+# directory. Committing it would put two SKILL.md files in the repo, which the
+# validator rejects.
+web/SKILL.md
+
+# A plan repo created by running the skill inside this one. Everything in a plan
+# repo is personal and none of it belongs in this package. These are anchored to
+# the repo root on purpose: an unanchored `seed.md` also matches
+# `templates/seed.md`, which silently dropped the template from the first
+# commit of this repo.
+/plan/
+/seed.md
+/likeness-*.md
+/interview.md
+/log.tsv
+/*.ics
+/outreach/
+
+.vercel
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Built by the release workflow from a tag, and by anyone reproducing that
+# build locally. A committed ZIP is a second copy of the package that ages out
+# of step with the tracked files it was cut from.
+/dist/
+/findher-*.zip
+/release-notes.md
